@@ -2,6 +2,7 @@ package ipss.group1.saborgourmet.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,11 +22,13 @@ public class Reserva {
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaReserva;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIME)
+    @DateTimeFormat(pattern = "HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private Date horaReserva;
 

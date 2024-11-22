@@ -1,12 +1,16 @@
-package ipss.group1.saborgourmet.controllers.mesas;
+package ipss.group1.saborgourmet.controllers;
 
 import ipss.group1.saborgourmet.models.Mesa;
 import ipss.group1.saborgourmet.services.MesaService;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/mesas")
 public class MesaController {
 
@@ -16,28 +20,33 @@ public class MesaController {
         this.mesaService = mesaService;
     }
 
-    @GetMapping("/{id}")
-    public Mesa getOneMesa(@PathVariable Long id) {
-        return mesaService.getMesaById(id);
-    }
-
     @GetMapping
-    public List<Mesa> getAllMesas() {
-        return mesaService.getAllMesas();
+    public String getAllMesas(Model model) {
+        List<Mesa> mesas = mesaService.getAllMesas();
+        model.addAttribute("mesas", mesas);
+        model.addAttribute("mesa", new Mesa());
+        return "mesas";
     }
 
     @PostMapping
-    public Mesa createMesa(@RequestBody Mesa mesa) {
-        return mesaService.createMesa(mesa);
+    public String createMesa(@ModelAttribute Mesa mesa) {
+        mesaService.createMesa(mesa);
+        return "redirect:/mesas";
     }
 
-    @PutMapping("/{id}")
-    public Mesa updateMesa(@PathVariable Long id, @RequestBody Mesa mesa) {
-        return mesaService.updateMesa(id, mesa);
+    @PostMapping("/update/{id}")
+    public String updateMesa(@PathVariable Long id, @ModelAttribute Mesa mesa) {
+        try {
+            mesaService.updateMesa(id, mesa);
+            return "redirect:/mesas";
+        } catch (RuntimeException e) {
+            return "error";
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteMesa(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    public String deleteMesa(@PathVariable Long id) {
         mesaService.deleteMesa(id);
+        return "redirect:/mesas";
     }
 }

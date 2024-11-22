@@ -2,11 +2,12 @@ package ipss.group1.saborgourmet.controllers;
 
 import ipss.group1.saborgourmet.models.Reserva;
 import ipss.group1.saborgourmet.services.ReservaService;
+import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/reservas")
 public class ReservaController {
 
@@ -16,28 +17,29 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
-    @GetMapping("/{id}")
-    public Reserva getOneReserva(@PathVariable Long id) {
-        return reservaService.getReservaById(id);
-    }
-
     @GetMapping
-    public List<Reserva> getAllReservas() {
-        return reservaService.getallReservas();
+    public String getAllReservas(Model model) {
+        List<Reserva> reservas = reservaService.getallReservas();
+        model.addAttribute("reservas", reservas);
+        model.addAttribute("reserva", new Reserva());
+        return "reservas";
     }
 
     @PostMapping
-    public Reserva createReserva(@RequestBody Reserva reserva) {
-        return reservaService.createReserva(reserva);
+    public String createReserva(@ModelAttribute Reserva reserva) {
+        reservaService.createReserva(reserva);
+        return "redirect:/reservas";
     }
 
-    @PutMapping("/{id}")
-    public Reserva updateReserva(@PathVariable Long id, @RequestBody Reserva reserva) {
-        return reservaService.updateReserva(id, reserva);
+    @PostMapping("/update/{id}")
+    public String updateReserva(@PathVariable Long id, @ModelAttribute Reserva reserva) {
+        reservaService.updateReserva(id, reserva);
+        return "redirect:/reservas";
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteReserva(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    public String deleteReserva(@PathVariable Long id) {
         reservaService.deleteReserva(id);
+        return "redirect:/reservas";
     }
 }
