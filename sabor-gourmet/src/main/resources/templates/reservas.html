@@ -39,6 +39,7 @@
     <p th:text="${errorMessage}"></p>
   </div>
 
+<<<<<<< HEAD
   <!-- Tabla de Reservas -->
   <table class="table table-hover mt-4">
     <thead class="thead-dark">
@@ -84,6 +85,48 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">&times;</span>
           </button>
+=======
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Create New Reserva</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/reservas}" th:object="${reserva}" method="post">
+                        <div class="form-group">
+                            <label for="fecha">Fecha:</label>
+                            <input type="text" id="fecha" th:field="*{fechaReserva}" class="form-control" th:required="required" th:placeholder="dd-mm-aaaa"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="hora">Hora:</label>
+                            <input type="text" id="hora" th:field="*{horaReserva}" class="form-control" th:required="required" placeholder="hh:mm"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="idCliente">Id Cliente:</label>
+                            <select id="idCliente" th:field="*{cliente.clienteId}" class="form-control" th:required="required">
+                                <option th:each="idCliente : ${idActivasClientes}" th:value="${idCliente}" th:text="${idCliente}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idMesa">Id Mesa:</label>
+                            <select id="idMesa" th:field="*{mesa.mesaId}" class="form-control" th:required="required">
+                                <option th:each="idMesa : ${idActivasMesa}" th:value="${idMesa}" th:text="${idMesa}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duracion">Duración Reserva:</label>
+                            <input type="text" id="duracion" th:field="*{duracion}" class="form-control" th:required="required" placeholder="Duración en minutos"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+>>>>>>> e908e9fc48ddf6b034be878fa2fe90bd3b3c1be6
         </div>
         <div class="modal-body">
           <form th:action="@{/reservas}" method="post" th:object="${reserva}">

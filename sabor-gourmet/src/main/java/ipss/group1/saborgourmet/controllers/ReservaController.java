@@ -3,6 +3,8 @@ package ipss.group1.saborgourmet.controllers;
 import ipss.group1.saborgourmet.models.Reserva;
 import ipss.group1.saborgourmet.services.ClienteService;
 import ipss.group1.saborgourmet.services.MesaService;
+import ipss.group1.saborgourmet.services.ClienteService;
+import ipss.group1.saborgourmet.services.MesaService;
 import ipss.group1.saborgourmet.services.ReservaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/reservas")
 public class ReservaController {
 
-    private final ReservaService reservaService;
     private final MesaService mesaService;
     private final ClienteService clienteService;
 
+    
+private final ReservaService reservaService;
     public ReservaController(ReservaService reservaService, MesaService mesaService, ClienteService clienteService) {
         this.reservaService = reservaService;
         this.mesaService = mesaService;
@@ -24,6 +27,10 @@ public class ReservaController {
 
     @GetMapping
     public String getAllReservas(Model model) {
+        List<Integer> idActivasClientes = clienteService.getAllClientes().stream().map(cliente -> Math.toIntExact(cliente.getClienteId())).toList();
+        List<Integer> idActivasMesa = mesaService.getAllMesas().stream().map(mesa -> Math.toIntExact(mesa.getMesaId())).toList();
+        model.addAttribute("idActivasClientes", idActivasClientes);
+        model.addAttribute("idActivasMesa", idActivasMesa);
         model.addAttribute("reservas", reservaService.getAllReservas());
         model.addAttribute("reserva", new Reserva());
         model.addAttribute("clientes", clienteService.getAllClientes());
