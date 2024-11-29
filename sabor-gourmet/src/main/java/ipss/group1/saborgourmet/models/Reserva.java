@@ -28,8 +28,8 @@ public class Reserva {
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIME)
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private Date horaReserva;
 
     @Column(nullable = false, columnDefinition = "int default 60")

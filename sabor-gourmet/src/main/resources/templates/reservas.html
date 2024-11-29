@@ -56,15 +56,19 @@
                         </div>
                         <div class="form-group">
                             <label for="hora">Hora:</label>
-                            <input type="text" id="hora" th:field="*{horaReserva}" class="form-control" th:required="required" placeholder="hh:mm:ss"/>
+                            <input type="text" id="hora" th:field="*{horaReserva}" class="form-control" th:required="required" placeholder="hh:mm"/>
                         </div>
                         <div class="form-group">
                             <label for="idCliente">Id Cliente:</label>
-                            <input type="text" id="idCliente" th:field="*{cliente.clienteId}" class="form-control" th:required="required"/>
+                            <select id="idCliente" th:field="*{cliente.clienteId}" class="form-control" th:required="required">
+                                <option th:each="idCliente : ${idActivasClientes}" th:value="${idCliente}" th:text="${idCliente}"></option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="idMesa">Id Mesa:</label>
-                            <input type="text" id="idMesa" th:field="*{mesa.mesaId}" class="form-control" th:required="required"/>
+                            <select id="idMesa" th:field="*{mesa.mesaId}" class="form-control" th:required="required">
+                                <option th:each="idMesa : ${idActivasMesa}" th:value="${idMesa}" th:text="${idMesa}"></option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="duracion">Duración Reserva:</label>
