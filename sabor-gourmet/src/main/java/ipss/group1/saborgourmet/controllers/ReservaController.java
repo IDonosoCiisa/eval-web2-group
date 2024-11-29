@@ -10,15 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/reservas")
 public class ReservaController {
 
     private final MesaService mesaService;
     private final ClienteService clienteService;
+    private final ReservaService reservaService;
 
-    
-private final ReservaService reservaService;
     public ReservaController(ReservaService reservaService, MesaService mesaService, ClienteService clienteService) {
         this.reservaService = reservaService;
         this.mesaService = mesaService;
@@ -33,8 +34,6 @@ private final ReservaService reservaService;
         model.addAttribute("idActivasMesa", idActivasMesa);
         model.addAttribute("reservas", reservaService.getAllReservas());
         model.addAttribute("reserva", new Reserva());
-        model.addAttribute("clientes", clienteService.getAllClientes());
-        model.addAttribute("mesas", mesaService.getAllMesas());
         return "reservas";
     }
 
