@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Gestión de Clientes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+        <h1>Clientes</h1>
+        <a href="/" class="btn btn-custom">Volver al Home</a>
+    </div>
+    <!-- Contenido de la vista de clientes -->
+    <p>Aquí puedes gestionar los clientes.</p>
+</div>
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+      <i class="bi bi-person-plus"></i> Nuevo Cliente
+    </button>
+  </div>
+
+  <!-- Tabla de Clientes -->
+  <table class="table table-hover">
+    <thead class="table-primary">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="cliente : ${clientes}">
+        <td th:text="${cliente.clienteId}"></td>
+        <td th:text="${cliente.nombre}"></td>
+        <td th:text="${cliente.apellido}"></td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" 
+                  th:data-bs-target="'#editModal' + ${cliente.clienteId}">
+            <i class="bi bi-pencil-square"></i> Editar
+          </button>
+          <form th:action="@{/clientes/delete/{id}(id=${cliente.clienteId})}" method="get" class="d-inline">
+            <button type="submit" class="btn btn-danger btn-sm">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal Crear Cliente -->
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="createModalLabel">Crear Nuevo Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form th:action="@{/clientes}" th:object="${cliente}" method="post">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre:</label>
+              <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="apellido" class="form-label">Apellido:</label>
+              <input type="text" id="apellido" th:field="*{apellido}" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modales Editar Clientes -->
+  <div th:each="cliente : ${clientes}">
+    <div class="modal fade" th:id="'editModal' + ${cliente.clienteId}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title" id="editModalLabel">Editar Cliente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/clientes/update/{id}(id=${cliente.clienteId})}" th:object="${cliente}" method="post">
+              <div class="mb-3">
+                <label for="nombreUpdate" class="form-label">Nombre:</label>
+                <input type="text" id="nombreUpdate" th:field="*{nombre}" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="apellidoUpdate" class="form-label">Apellido:</label>
+                <input type="text" id="apellidoUpdate" th:field="*{apellido}" class="form-control" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Opcional: Validaciones o comportamiento adicional
+</script>
+</body>
+</html>

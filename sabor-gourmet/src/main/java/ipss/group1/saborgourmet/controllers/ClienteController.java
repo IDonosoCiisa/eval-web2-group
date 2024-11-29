@@ -2,11 +2,12 @@ package ipss.group1.saborgourmet.controllers;
 
 import ipss.group1.saborgourmet.models.Cliente;
 import ipss.group1.saborgourmet.services.ClienteService;
+import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/clientes")
 public class ClienteController {
 
@@ -15,24 +16,31 @@ public class ClienteController {
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
-    @GetMapping("/{id}")
-    public Cliente getOneCliente(@PathVariable Long id) {
-        return clienteService.getOneCliente(id);
-    }
+
+
     @GetMapping
-    public List<Cliente> getAllClientes() {
-        return clienteService.getAllClientes();
+    public String getAllClientes(Model model) {
+        List<Cliente> clientes = clienteService.getAllClientes();
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("cliente", new Cliente());
+        return "clientes";
     }
+
     @PostMapping
-    public Cliente createCliente(@RequestBody Cliente cliente) {
-        return clienteService.createCliente(cliente);
+    public String createCliente(@ModelAttribute Cliente cliente) {
+        clienteService.createCliente(cliente);
+        return "redirect:/clientes";
     }
-    @PutMapping("/{id}")
-    public Cliente updateCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        return clienteService.updateCliente(id, cliente);
+
+    @PostMapping("/update/{id}")
+    public String updateCliente(@PathVariable Long id, @ModelAttribute Cliente cliente) {
+        clienteService.updateCliente(id, cliente);
+        return "redirect:/clientes";
     }
-    @DeleteMapping("/{id}")
-    public void deleteCliente(@PathVariable Long id) {
+
+    @GetMapping("/delete/{id}")
+    public String deleteCliente(@PathVariable Long id) {
         clienteService.deleteCliente(id);
+        return "redirect:/clientes";
     }
 }

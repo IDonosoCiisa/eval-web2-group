@@ -2,11 +2,16 @@ package ipss.group1.saborgourmet.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clienteId;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reserva> reservas;
 
     @Column(nullable = false)
     private String nombre;
@@ -14,6 +19,14 @@ public class Cliente {
     private String apellido;
 
     public Cliente() {
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 
     public Long getClienteId() {

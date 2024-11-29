@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Reservas</h1>
+        <a href="/" class="btn btn-custom">Volver al Home</a>
+    </div>
+    <!-- Contenido de la vista de reservas -->
+    <p>Aquí puedes gestionar las reservas.</p>
+</div>
+<div class="container">
+
+    <!-- Mensajes de Notificación -->
+    <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <!-- Tabla de Reservas -->
+    <table class="table table-hover mt-4">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Mesa</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Duración</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reserva : ${reservas}">
+            <td th:text="${reserva.id}"></td>
+            <td th:text="${reserva.cliente.nombre + ' ' + reserva.cliente.apellido}"></td>
+            <td th:text="'Mesa ' + ${reserva.mesa.mesaId}"></td>
+            <td th:text="${#dates.format(reserva.fechaReserva, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#dates.format(reserva.horaReserva, 'HH:mm')}"></td>
+            <td th:text="${reserva.duracion + ' min'}"></td>
+            <td>
+                <button class="btn btn-primary btn-sm" th:attr="data-target='#editModal' + ${reserva.id}" data-toggle="modal">
+                    Editar
+                </button>
+                <button class="btn btn-danger btn-sm" th:attr="data-target='#deleteModal' + ${reserva.id}" data-toggle="modal">
+                    Eliminar
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Botón Crear -->
+    <button class="btn btn-success btn-block mt-4" data-toggle="modal" data-target="#createModal">Nueva Reserva</button>
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva Reserva</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/reservas}" th:object="${reserva}" method="post">
+                        <div class="form-group">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" id="fechaCreate" name="fechaReserva" class="form-control" th:value="${#dates.format(reserva.fechaReserva, 'yyyy-MM-dd')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hora">Hora</label>
+                            <input type="time" id="horaCreate" name="horaReserva" class="form-control" th:value="${#dates.format(reserva.horaReserva, 'HH:mm')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="idCliente">Id Cliente:</label>
+                            <select id="idCliente" th:field="*{cliente.clienteId}" class="form-control" th:required="required">
+                                <option th:each="idCliente : ${idActivasClientes}" th:value="${idCliente}" th:text="${idCliente}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idMesa">Id Mesa:</label>
+                            <select id="idMesa" th:field="*{mesa.mesaId}" class="form-control" th:required="required">
+                                <option th:each="idMesa : ${idActivasMesa}" th:value="${idMesa}" th:text="${idMesa}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duracion">Duración Reserva:</label>
+                            <input type="text" id="duracionCreate" th:field="*{duracion}" class="form-control" th:required="required" placeholder="Duración en minutos"  value="60"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales Eliminar Reserva -->
+    <div th:each="reserva : ${reservas}">
+        <div class="modal fade" th:id="'deleteModal' + ${reserva.id}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar Eliminación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar la reserva <strong th:text="'#' + ${reserva.id}"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form th:action="@{/reservas/delete}" method="post">
+                            <input type="hidden" name="id" th:value="${reserva.id}">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Reserva -->
+    <div th:each="reserva : ${reservas}">
+        <div class="modal fade" th:id="'editModal' + ${reserva.id}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Reserva</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/reservas/update}" method="post">
+                            <input type="hidden" name="id" th:value="${reserva.id}">
+                            <div class="form-group">
+                                <label for="cliente">Cliente</label>
+                                <select id="cliente" name="cliente.clienteId" class="form-control" required>
+                                    <option th:each="cliente : ${idActivasClientes}" th:value="${cliente}" th:text="${cliente}" th:selected="${cliente == reserva.cliente.clienteId}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mesa">Mesa</label>
+                                <select id="mesa" name="mesa.mesaId" class="form-control" required>
+                                    <option th:each="mesa : ${idActivasMesa}" th:value="${mesa}" th:text="${mesa}" th:selected="${mesa == reserva.mesa.mesaId}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha">Fecha</label>
+                                <input type="date" id="fecha" name="fechaReserva" class="form-control" th:value="${#dates.format(reserva.fechaReserva, 'yyyy-MM-dd')}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hora">Hora</label>
+                                <input type="time" id="hora" name="horaReserva" class="form-control" th:value="${#dates.format(reserva.horaReserva, 'HH:mm')}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="duracion">Duración (minutos)</label>
+                                <input type="number" id="duracion" name="duracion" class="form-control" th:value="${reserva.duracion}" min="1" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

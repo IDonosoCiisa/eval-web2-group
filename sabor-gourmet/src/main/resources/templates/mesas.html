@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <title>Gestión de Mesas</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+        <h1>Mesas</h1>
+        <a href="/" class="btn btn-custom">Volver al Home</a>
+    </div>
+    <!-- Contenido de la vista de mesas -->
+    <p>Aquí puedes gestionar las mesas.</p>
+</div>
+
+<div class="container">
+  <div th:if="${errorMessage}" class="alert alert-danger">
+    <p th:text="${errorMessage}"></p>
+  </div>
+  
+  <!-- Tabla de Mesas -->
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Capacidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="mesa : ${mesas}">
+        <td th:text="${mesa.mesaId}"></td>
+        <td th:text="${mesa.capacidad}"></td>
+        <td>
+          <button class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#editModal' + ${mesa.mesaId}">Editar</button>
+          <form th:action="@{/mesas/delete/{id}(id=${mesa.mesaId})}" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Botón Crear -->
+  <button class="btn btn-success mt-3" data-toggle="modal" data-target="#createModal">Nueva Mesa</button>
+
+  <!-- Modal Crear Mesa -->
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nueva Mesa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form th:action="@{/mesas}" th:object="${mesa}" method="post">
+            <div class="form-group">
+              <label for="capacidad">Capacidad</label>
+              <input type="number" id="capacidad" name="capacidad" class="form-control" min="1" placeholder="Capacidad" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Crear</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modales Editar Mesas -->
+  <div th:each="mesa : ${mesas}">
+    <div class="modal fade" th:id="'editModal' + ${mesa.mesaId}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Mesa</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/mesas/update/{id}(id=${mesa.mesaId})}" method="post">
+              <div class="form-group">
+                <label for="capacidadUpdate">Capacidad</label>
+                <input type="number" id="capacidadUpdate" name="capacidad" th:value="${mesa.capacidad}" class="form-control" min="1" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
