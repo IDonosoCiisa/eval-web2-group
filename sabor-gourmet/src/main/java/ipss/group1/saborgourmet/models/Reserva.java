@@ -22,14 +22,15 @@ public class Reserva {
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd") // Coincide con el input de HTML
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date fechaReserva;
+
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIME)
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private Date horaReserva;
 
     @Column(nullable = false, columnDefinition = "int default 60")
