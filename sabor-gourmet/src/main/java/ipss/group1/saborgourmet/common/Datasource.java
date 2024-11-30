@@ -7,6 +7,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 
 import javax.sql.DataSource;
 
+// Clase para configurar la conexión a la base de datos MUSQLLite con los datos del archivo application.properties
 @Configuration
 public class Datasource {
 

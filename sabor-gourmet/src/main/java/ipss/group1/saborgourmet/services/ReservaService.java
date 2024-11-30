@@ -6,27 +6,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+// Servicio para la entidad Reserva, da uso al repositorio ReservaRepository y sus metodos.
 @Service
 public class ReservaService {
+    // Repositorio para la entidad Reserva es injectado en el servicio para disponibilizar su uso.
     private final ReservaRepository reservaRepository;
 
     public ReservaService(ReservaRepository reservaRepository) {
         this.reservaRepository = reservaRepository;
     }
-
-    // Método para obtener una reserva por ID
+    // Metodo para obtener una reserva, si no encuentra resultado arroja error de reserva no encontrada.
     public Reserva getReservaById(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada con ID: " + id));
     }
 
-    // Método para obtener todas las reservas
     public List<Reserva> getAllReservas() {
         return reservaRepository.findAll();
     }
 
-    // Método para crear una nueva reserva
     public Reserva createReserva(Reserva reserva) {
         try {
             return reservaRepository.save(reserva);
@@ -35,7 +33,6 @@ public class ReservaService {
         }
     }
 
-    // Método para actualizar una reserva existente
     public Reserva updateReserva(Long id, Reserva reserva) {
         Reserva reservaToUpdate = getReservaById(id);
         reservaToUpdate.setFechaReserva(reserva.getFechaReserva());
@@ -45,7 +42,6 @@ public class ReservaService {
         return reservaRepository.save(reservaToUpdate);
     }
 
-    // Método para eliminar una reserva
     public void deleteReserva(Long id) {
         Optional<Reserva> reserva = reservaRepository.findById(id);
         if (reserva.isPresent()) {

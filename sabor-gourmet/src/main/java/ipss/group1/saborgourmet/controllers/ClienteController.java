@@ -7,10 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+//Controlador para la entidad Cliente, maneja las peticiones de la vista y sus operaciones crud.
 @Controller
 @RequestMapping("/clientes")
 public class ClienteController {
-
+    // Servicio para la entidad Cliente es injectado en el controlador para disponibilizar su uso.
     private final ClienteService clienteService;
 
     public ClienteController(ClienteService clienteService) {
@@ -22,6 +23,7 @@ public class ClienteController {
     public String getAllClientes(Model model) {
         List<Cliente> clientes = clienteService.getAllClientes();
         model.addAttribute("clientes", clientes);
+        // para creación de un nuevo cliente.
         model.addAttribute("cliente", new Cliente());
         return "clientes";
     }

@@ -5,11 +5,12 @@ import ipss.group1.saborgourmet.services.MesaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+//Controlador para la entidad Mesa, maneja las peticiones de la vista y sus operaciones crud.
+// Intentamos manejar los errores que puedan surgir en la vista con try catch.
 @Controller
 @RequestMapping("/mesas")
 public class MesaController {
-
+    // Servicio para la entidad Mesa es injectado en el controlador para disponibilizar su uso.
     private final MesaService mesaService;
 
     public MesaController(MesaService mesaService) {
@@ -20,6 +21,7 @@ public class MesaController {
     public String getAllMesas(Model model) {
         try {
             model.addAttribute("mesas", mesaService.getAllMesas());
+            // para creación de una nueva mesa.
             model.addAttribute("mesa", new Mesa());
             return "mesas";
         } catch (Exception e) {

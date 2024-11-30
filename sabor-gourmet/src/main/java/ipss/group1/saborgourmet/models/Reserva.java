@@ -5,28 +5,27 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
+//Entidad de Jpa para la tabla Reserva, con sus atributos y relaciones.
 @Entity
 public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    //Relación muchos a uno con la tabla Cliente. De esta manera, al eliminar una reserva, no se elimina el cliente.
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "clienteId", nullable = false)
     private Cliente cliente;
-
+    //Relación muchos a uno con la tabla Mesa. De esta manera, al eliminar una reserva, no se elimina la mesa.
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "mesaId", nullable = false)
     private Mesa mesa;
-
+    //Atributo Fecha de la tabla reserva, con formato yyyy-MM-dd y su mapeo al json con el mismo formato.
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd") // Coincide con el input de HTML
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date fechaReserva;
-
-
+    //Atributo Hora de la tabla reserva, con formato HH:mm y su mapeo al json con el mismo formato.
     @Column(nullable = false)
     @Temporal(TemporalType.TIME)
     @DateTimeFormat(pattern = "HH:mm")

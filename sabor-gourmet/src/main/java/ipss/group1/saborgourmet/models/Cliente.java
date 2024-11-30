@@ -3,13 +3,14 @@ package ipss.group1.saborgourmet.models;
 import jakarta.persistence.*;
 
 import java.util.List;
-
+//Entidad de Jpa para la tabla Cliente, con sus atributos y relaciones.
 @Entity
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clienteId;
 
+    //Relación uno a muchos con la tabla Reserva. De esta manera, al eliminar un cliente, se eliminan todas sus reservas.
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reserva> reservas;
 
@@ -53,6 +54,7 @@ public class Cliente {
         this.nombre = nombre;
     }
 
+    //Builder para la entidad Cliente (sin lista de reservas)
     public static final class ClientesBuilder {
         private Long id;
         private String nombre;
